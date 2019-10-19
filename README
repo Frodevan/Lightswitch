@@ -1,0 +1,3 @@
+This project is for remote control of a light-switch.
+
+One microcontroller (ATMega168) receive commands from a computer over Serial port (evt USB-Serial), and transmits synchronous serial data using the hardware peripherals for SPI. The other controller receive data and either flips a servo up or down. The servo is mounted to a lightswitch.

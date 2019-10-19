@@ -1,0 +1,496 @@
+
+code.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         00000206  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000002  00800060  00000206  0000027a  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .comment      00000030  00000000  00000000  0000027c  2**0
+                  CONTENTS, READONLY
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  000002ac  2**2
+                  CONTENTS, READONLY
+  4 .debug_aranges 00000050  00000000  00000000  000002e8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_info   000006b2  00000000  00000000  00000338  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_abbrev 00000587  00000000  00000000  000009ea  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_line   000003e6  00000000  00000000  00000f71  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_frame  000000cc  00000000  00000000  00001358  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_str    0000033e  00000000  00000000  00001424  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_loc    00000273  00000000  00000000  00001762  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_ranges 00000040  00000000  00000000  000019d5  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	10 c0       	rjmp	.+32     	; 0x22 <__ctors_end>
+   2:	22 c0       	rjmp	.+68     	; 0x48 <__bad_interrupt>
+   4:	21 c0       	rjmp	.+66     	; 0x48 <__bad_interrupt>
+   6:	20 c0       	rjmp	.+64     	; 0x48 <__bad_interrupt>
+   8:	1f c0       	rjmp	.+62     	; 0x48 <__bad_interrupt>
+   a:	1e c0       	rjmp	.+60     	; 0x48 <__bad_interrupt>
+   c:	1d c0       	rjmp	.+58     	; 0x48 <__bad_interrupt>
+   e:	1c c0       	rjmp	.+56     	; 0x48 <__bad_interrupt>
+  10:	1b c0       	rjmp	.+54     	; 0x48 <__bad_interrupt>
+  12:	1a c0       	rjmp	.+52     	; 0x48 <__bad_interrupt>
+  14:	19 c0       	rjmp	.+50     	; 0x48 <__bad_interrupt>
+  16:	18 c0       	rjmp	.+48     	; 0x48 <__bad_interrupt>
+  18:	17 c0       	rjmp	.+46     	; 0x48 <__bad_interrupt>
+  1a:	16 c0       	rjmp	.+44     	; 0x48 <__bad_interrupt>
+  1c:	15 c0       	rjmp	.+42     	; 0x48 <__bad_interrupt>
+  1e:	14 c0       	rjmp	.+40     	; 0x48 <__bad_interrupt>
+  20:	c6 c0       	rjmp	.+396    	; 0x1ae <__vector_16>
+
+00000022 <__ctors_end>:
+  22:	11 24       	eor	r1, r1
+  24:	1f be       	out	0x3f, r1	; 63
+  26:	cf e5       	ldi	r28, 0x5F	; 95
+  28:	d2 e0       	ldi	r29, 0x02	; 2
+  2a:	de bf       	out	0x3e, r29	; 62
+  2c:	cd bf       	out	0x3d, r28	; 61
+
+0000002e <__do_copy_data>:
+  2e:	10 e0       	ldi	r17, 0x00	; 0
+  30:	a0 e6       	ldi	r26, 0x60	; 96
+  32:	b0 e0       	ldi	r27, 0x00	; 0
+  34:	e6 e0       	ldi	r30, 0x06	; 6
+  36:	f2 e0       	ldi	r31, 0x02	; 2
+  38:	02 c0       	rjmp	.+4      	; 0x3e <__SP_H__>
+  3a:	05 90       	lpm	r0, Z+
+  3c:	0d 92       	st	X+, r0
+  3e:	a2 36       	cpi	r26, 0x62	; 98
+  40:	b1 07       	cpc	r27, r17
+  42:	d9 f7       	brne	.-10     	; 0x3a <__do_copy_data+0xc>
+  44:	3d d0       	rcall	.+122    	; 0xc0 <main>
+  46:	dd c0       	rjmp	.+442    	; 0x202 <_exit>
+
+00000048 <__bad_interrupt>:
+  48:	db cf       	rjmp	.-74     	; 0x0 <__vectors>
+
+0000004a <setup_servo>:
+/* Servostuff                                          */
+/*******************************************************/
+
+void setup_servo()
+{
+	DDRA |= (1<<DDA7);
+  4a:	d7 9a       	sbi	0x1a, 7	; 26
+	TCCR0A |= (1<<COM0B1) | (1<<COM0B0) | (1<<WGM01) | (1<<WGM00);	// Set output på OC0B og fast-PWM
+  4c:	80 b7       	in	r24, 0x30	; 48
+  4e:	83 63       	ori	r24, 0x33	; 51
+  50:	80 bf       	out	0x30, r24	; 48
+	TCCR0B |= (1<<CS00) | (1<<CS02) | (1<<WGM02);					// også sett prescaler
+  52:	83 b7       	in	r24, 0x33	; 51
+  54:	8d 60       	ori	r24, 0x0D	; 13
+  56:	83 bf       	out	0x33, r24	; 51
+	TCNT0 = 0x00;
+  58:	12 be       	out	0x32, r1	; 50
+	OCR0A = 0x80;
+  5a:	80 e8       	ldi	r24, 0x80	; 128
+  5c:	86 bf       	out	0x36, r24	; 54
+	OCR0B = 0x74;
+  5e:	84 e7       	ldi	r24, 0x74	; 116
+  60:	8c bf       	out	0x3c, r24	; 60
+  62:	08 95       	ret
+
+00000064 <setup_com>:
+// Er ikke pinner nok til treveis og I2C suger våt eselballe.
+//
+
+void setup_com()
+{
+	cli();
+  64:	f8 94       	cli
+	DDRB &= ~(1<<PINB0) & ~(1<<PINB2);
+  66:	87 b3       	in	r24, 0x17	; 23
+  68:	8a 7f       	andi	r24, 0xFA	; 250
+  6a:	87 bb       	out	0x17, r24	; 23
+	USIDR = 0;																	// Reset data
+  6c:	1f b8       	out	0x0f, r1	; 15
+	USISR &= ~(1<<USICNT0) & ~(1<<USICNT1) & ~(1<<USICNT2) & ~(1<<USICNT3);		// Reset input clock
+  6e:	8e b1       	in	r24, 0x0e	; 14
+  70:	80 7f       	andi	r24, 0xF0	; 240
+  72:	8e b9       	out	0x0e, r24	; 14
+	USISR |= (1<<USIOIF);														// & interrupt
+  74:	76 9a       	sbi	0x0e, 6	; 14
+	USICR = (1<<USICS1) | (1<<USIOIE);											// Set input only and enable interrupt
+  76:	88 e4       	ldi	r24, 0x48	; 72
+  78:	8d b9       	out	0x0d, r24	; 13
+	sei();
+  7a:	78 94       	sei
+  7c:	08 95       	ret
+
+0000007e <delay>:
+/************************************************************************/
+/* Noncritical Timetjafs                                                */
+/************************************************************************/
+void delay(int mill)
+{
+	for(int i=0; i<mill; i++)
+  7e:	18 16       	cp	r1, r24
+  80:	19 06       	cpc	r1, r25
+  82:	6c f4       	brge	.+26     	; 0x9e <delay+0x20>
+  84:	20 e0       	ldi	r18, 0x00	; 0
+  86:	30 e0       	ldi	r19, 0x00	; 0
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+  88:	ef ec       	ldi	r30, 0xCF	; 207
+  8a:	f7 e0       	ldi	r31, 0x07	; 7
+  8c:	31 97       	sbiw	r30, 0x01	; 1
+  8e:	f1 f7       	brne	.-4      	; 0x8c <delay+0xe>
+  90:	00 c0       	rjmp	.+0      	; 0x92 <delay+0x14>
+  92:	00 00       	nop
+  94:	2f 5f       	subi	r18, 0xFF	; 255
+  96:	3f 4f       	sbci	r19, 0xFF	; 255
+  98:	82 17       	cp	r24, r18
+  9a:	93 07       	cpc	r25, r19
+  9c:	a9 f7       	brne	.-22     	; 0x88 <delay+0xa>
+  9e:	08 95       	ret
+
+000000a0 <lyspaa>:
+	OCR0B = 0x74;
+}
+
+void lyspaa()
+{
+	 OCR0B = 0x77;
+  a0:	87 e7       	ldi	r24, 0x77	; 119
+  a2:	8c bf       	out	0x3c, r24	; 60
+	 delay(500);
+  a4:	84 ef       	ldi	r24, 0xF4	; 244
+  a6:	91 e0       	ldi	r25, 0x01	; 1
+  a8:	ea df       	rcall	.-44     	; 0x7e <delay>
+ 	 OCR0B = 0x74;
+  aa:	84 e7       	ldi	r24, 0x74	; 116
+  ac:	8c bf       	out	0x3c, r24	; 60
+  ae:	08 95       	ret
+
+000000b0 <lysav>:
+}
+
+void lysav()
+{
+	 OCR0B = 0x71;	
+  b0:	81 e7       	ldi	r24, 0x71	; 113
+  b2:	8c bf       	out	0x3c, r24	; 60
+	 delay(500);
+  b4:	84 ef       	ldi	r24, 0xF4	; 244
+  b6:	91 e0       	ldi	r25, 0x01	; 1
+  b8:	e2 df       	rcall	.-60     	; 0x7e <delay>
+	 OCR0B = 0x74;
+  ba:	84 e7       	ldi	r24, 0x74	; 116
+  bc:	8c bf       	out	0x3c, r24	; 60
+  be:	08 95       	ret
+
+000000c0 <main>:
+
+volatile uint_fast8_t cominn = 0xFF;
+
+int main(void)
+{
+	setup_com();
+  c0:	d1 df       	rcall	.-94     	; 0x64 <setup_com>
+	setup_servo();
+  c2:	c3 df       	rcall	.-122    	; 0x4a <setup_servo>
+	int charcount = 0;
+  c4:	80 e0       	ldi	r24, 0x00	; 0
+  c6:	90 e0       	ldi	r25, 0x00	; 0
+	
+	
+	
+    while (1) 
+    {
+		uint_fast8_t data = 0xFF;
+  c8:	cf ef       	ldi	r28, 0xFF	; 255
+				case 1:
+					if (data == 'V') charcount++;
+					else charcount = 0;
+					break;
+				case 2:
+					if (data == ' ') charcount++;
+  ca:	0f 2e       	mov	r0, r31
+  cc:	f3 e0       	ldi	r31, 0x03	; 3
+  ce:	9f 2e       	mov	r9, r31
+  d0:	f0 2d       	mov	r31, r0
+  d2:	a1 2c       	mov	r10, r1
+					else charcount = 0;
+  d4:	10 e0       	ldi	r17, 0x00	; 0
+  d6:	d0 e0       	ldi	r29, 0x00	; 0
+					if (data == 'O') charcount++;
+					else charcount = 0;
+					break;
+				case 4:
+					if (data == 'N') {lyspaa(); charcount = 0;}
+					else if (data == 'F') charcount++;
+  d8:	0f 2e       	mov	r0, r31
+  da:	f5 e0       	ldi	r31, 0x05	; 5
+  dc:	7f 2e       	mov	r7, r31
+  de:	f0 2d       	mov	r31, r0
+  e0:	81 2c       	mov	r8, r1
+				case 2:
+					if (data == ' ') charcount++;
+					else charcount = 0;
+					break;
+				case 3:
+					if (data == 'O') charcount++;
+  e2:	68 94       	set
+  e4:	bb 24       	eor	r11, r11
+  e6:	b2 f8       	bld	r11, 2
+  e8:	c1 2c       	mov	r12, r1
+		if (data != 0xFF)
+			switch(charcount)
+			{
+				case 0:
+					if (data == 'O') charcount++;
+					else charcount = 0;
+  ea:	ff 24       	eor	r15, r15
+  ec:	f3 94       	inc	r15
+  ee:	00 e0       	ldi	r16, 0x00	; 0
+					break;
+				case 1:
+					if (data == 'V') charcount++;
+  f0:	68 94       	set
+  f2:	dd 24       	eor	r13, r13
+  f4:	d1 f8       	bld	r13, 1
+  f6:	e1 2c       	mov	r14, r1
+  f8:	11 c0       	rjmp	.+34     	; 0x11c <main+0x5c>
+					else charcount = 0;
+					break;
+				case 5:
+					if (data == 'F') lysav();
+				default:
+					charcount = 0;
+  fa:	81 2f       	mov	r24, r17
+  fc:	9d 2f       	mov	r25, r29
+  fe:	0e c0       	rjmp	.+28     	; 0x11c <main+0x5c>
+					if (data == 'O') charcount++;
+					else charcount = 0;
+					break;
+				case 1:
+					if (data == 'V') charcount++;
+					else charcount = 0;
+ 100:	81 2f       	mov	r24, r17
+ 102:	9d 2f       	mov	r25, r29
+ 104:	0b c0       	rjmp	.+22     	; 0x11c <main+0x5c>
+					break;
+				case 2:
+					if (data == ' ') charcount++;
+					else charcount = 0;
+ 106:	81 2f       	mov	r24, r17
+ 108:	9d 2f       	mov	r25, r29
+ 10a:	08 c0       	rjmp	.+16     	; 0x11c <main+0x5c>
+					break;
+				case 3:
+					if (data == 'O') charcount++;
+					else charcount = 0;
+ 10c:	81 2f       	mov	r24, r17
+ 10e:	9d 2f       	mov	r25, r29
+ 110:	05 c0       	rjmp	.+10     	; 0x11c <main+0x5c>
+					break;
+				case 4:
+					if (data == 'N') {lyspaa(); charcount = 0;}
+					else if (data == 'F') charcount++;
+					else charcount = 0;
+ 112:	81 2f       	mov	r24, r17
+ 114:	9d 2f       	mov	r25, r29
+ 116:	02 c0       	rjmp	.+4      	; 0x11c <main+0x5c>
+					break;
+				case 5:
+					if (data == 'F') lysav();
+				default:
+					charcount = 0;
+ 118:	81 2f       	mov	r24, r17
+ 11a:	9d 2f       	mov	r25, r29
+	
+	
+    while (1) 
+    {
+		uint_fast8_t data = 0xFF;
+		cli();
+ 11c:	f8 94       	cli
+		if(cominn != 0xFF)
+ 11e:	20 91 60 00 	lds	r18, 0x0060	; 0x800060 <__data_start>
+ 122:	2f 3f       	cpi	r18, 0xFF	; 255
+ 124:	29 f0       	breq	.+10     	; 0x130 <main+0x70>
+		{
+			data = cominn;
+ 126:	20 91 60 00 	lds	r18, 0x0060	; 0x800060 <__data_start>
+			cominn = 0xFF;
+ 12a:	c0 93 60 00 	sts	0x0060, r28	; 0x800060 <__data_start>
+ 12e:	01 c0       	rjmp	.+2      	; 0x132 <main+0x72>
+	
+	
+	
+    while (1) 
+    {
+		uint_fast8_t data = 0xFF;
+ 130:	2c 2f       	mov	r18, r28
+		if(cominn != 0xFF)
+		{
+			data = cominn;
+			cominn = 0xFF;
+		}
+		sei();
+ 132:	78 94       	sei
+		
+		if (data != 0xFF)
+ 134:	2f 3f       	cpi	r18, 0xFF	; 255
+ 136:	91 f3       	breq	.-28     	; 0x11c <main+0x5c>
+			switch(charcount)
+ 138:	82 30       	cpi	r24, 0x02	; 2
+ 13a:	91 05       	cpc	r25, r1
+ 13c:	d9 f0       	breq	.+54     	; 0x174 <main+0xb4>
+ 13e:	2c f4       	brge	.+10     	; 0x14a <main+0x8a>
+ 140:	00 97       	sbiw	r24, 0x00	; 0
+ 142:	51 f0       	breq	.+20     	; 0x158 <main+0x98>
+ 144:	01 97       	sbiw	r24, 0x01	; 1
+ 146:	89 f0       	breq	.+34     	; 0x16a <main+0xaa>
+ 148:	d8 cf       	rjmp	.-80     	; 0xfa <main+0x3a>
+ 14a:	84 30       	cpi	r24, 0x04	; 4
+ 14c:	91 05       	cpc	r25, r1
+ 14e:	e1 f0       	breq	.+56     	; 0x188 <main+0xc8>
+ 150:	b4 f0       	brlt	.+44     	; 0x17e <main+0xbe>
+ 152:	05 97       	sbiw	r24, 0x05	; 5
+ 154:	29 f1       	breq	.+74     	; 0x1a0 <main+0xe0>
+ 156:	d1 cf       	rjmp	.-94     	; 0xfa <main+0x3a>
+			{
+				case 0:
+					if (data == 'O') charcount++;
+					else charcount = 0;
+ 158:	4f 2d       	mov	r20, r15
+ 15a:	30 2f       	mov	r19, r16
+ 15c:	2f 34       	cpi	r18, 0x4F	; 79
+ 15e:	11 f0       	breq	.+4      	; 0x164 <main+0xa4>
+ 160:	41 2f       	mov	r20, r17
+ 162:	3d 2f       	mov	r19, r29
+ 164:	84 2f       	mov	r24, r20
+ 166:	93 2f       	mov	r25, r19
+ 168:	d9 cf       	rjmp	.-78     	; 0x11c <main+0x5c>
+					break;
+				case 1:
+					if (data == 'V') charcount++;
+ 16a:	26 35       	cpi	r18, 0x56	; 86
+ 16c:	49 f6       	brne	.-110    	; 0x100 <main+0x40>
+ 16e:	8d 2d       	mov	r24, r13
+ 170:	9e 2d       	mov	r25, r14
+ 172:	d4 cf       	rjmp	.-88     	; 0x11c <main+0x5c>
+					else charcount = 0;
+					break;
+				case 2:
+					if (data == ' ') charcount++;
+ 174:	20 32       	cpi	r18, 0x20	; 32
+ 176:	39 f6       	brne	.-114    	; 0x106 <main+0x46>
+ 178:	89 2d       	mov	r24, r9
+ 17a:	9a 2d       	mov	r25, r10
+ 17c:	cf cf       	rjmp	.-98     	; 0x11c <main+0x5c>
+					else charcount = 0;
+					break;
+				case 3:
+					if (data == 'O') charcount++;
+ 17e:	2f 34       	cpi	r18, 0x4F	; 79
+ 180:	29 f6       	brne	.-118    	; 0x10c <main+0x4c>
+ 182:	8b 2d       	mov	r24, r11
+ 184:	9c 2d       	mov	r25, r12
+ 186:	ca cf       	rjmp	.-108    	; 0x11c <main+0x5c>
+					else charcount = 0;
+					break;
+				case 4:
+					if (data == 'N') {lyspaa(); charcount = 0;}
+ 188:	2e 34       	cpi	r18, 0x4E	; 78
+ 18a:	21 f4       	brne	.+8      	; 0x194 <main+0xd4>
+ 18c:	89 df       	rcall	.-238    	; 0xa0 <lyspaa>
+ 18e:	81 2f       	mov	r24, r17
+ 190:	9d 2f       	mov	r25, r29
+ 192:	c4 cf       	rjmp	.-120    	; 0x11c <main+0x5c>
+					else if (data == 'F') charcount++;
+ 194:	26 34       	cpi	r18, 0x46	; 70
+ 196:	09 f0       	breq	.+2      	; 0x19a <main+0xda>
+ 198:	bc cf       	rjmp	.-136    	; 0x112 <main+0x52>
+ 19a:	87 2d       	mov	r24, r7
+ 19c:	98 2d       	mov	r25, r8
+ 19e:	be cf       	rjmp	.-132    	; 0x11c <main+0x5c>
+					else charcount = 0;
+					break;
+				case 5:
+					if (data == 'F') lysav();
+ 1a0:	26 34       	cpi	r18, 0x46	; 70
+ 1a2:	09 f0       	breq	.+2      	; 0x1a6 <main+0xe6>
+ 1a4:	b9 cf       	rjmp	.-142    	; 0x118 <main+0x58>
+ 1a6:	84 df       	rcall	.-248    	; 0xb0 <lysav>
+				default:
+					charcount = 0;
+ 1a8:	81 2f       	mov	r24, r17
+ 1aa:	9d 2f       	mov	r25, r29
+ 1ac:	b7 cf       	rjmp	.-146    	; 0x11c <main+0x5c>
+
+000001ae <__vector_16>:
+	USICR = (1<<USICS1) | (1<<USIOIE);											// Set input only and enable interrupt
+	sei();
+}
+
+ISR(USI_OVF_vect)
+{
+ 1ae:	1f 92       	push	r1
+ 1b0:	0f 92       	push	r0
+ 1b2:	0f b6       	in	r0, 0x3f	; 63
+ 1b4:	0f 92       	push	r0
+ 1b6:	11 24       	eor	r1, r1
+ 1b8:	2f 93       	push	r18
+ 1ba:	3f 93       	push	r19
+ 1bc:	4f 93       	push	r20
+ 1be:	5f 93       	push	r21
+ 1c0:	6f 93       	push	r22
+ 1c2:	7f 93       	push	r23
+ 1c4:	8f 93       	push	r24
+ 1c6:	9f 93       	push	r25
+ 1c8:	af 93       	push	r26
+ 1ca:	bf 93       	push	r27
+ 1cc:	ef 93       	push	r30
+ 1ce:	ff 93       	push	r31
+	cominn = USIDR;
+ 1d0:	8f b1       	in	r24, 0x0f	; 15
+ 1d2:	80 93 60 00 	sts	0x0060, r24	; 0x800060 <__data_start>
+	setup_com();
+ 1d6:	46 df       	rcall	.-372    	; 0x64 <setup_com>
+	delay(10);
+ 1d8:	8a e0       	ldi	r24, 0x0A	; 10
+ 1da:	90 e0       	ldi	r25, 0x00	; 0
+ 1dc:	50 df       	rcall	.-352    	; 0x7e <delay>
+	setup_com();
+ 1de:	42 df       	rcall	.-380    	; 0x64 <setup_com>
+}
+ 1e0:	ff 91       	pop	r31
+ 1e2:	ef 91       	pop	r30
+ 1e4:	bf 91       	pop	r27
+ 1e6:	af 91       	pop	r26
+ 1e8:	9f 91       	pop	r25
+ 1ea:	8f 91       	pop	r24
+ 1ec:	7f 91       	pop	r23
+ 1ee:	6f 91       	pop	r22
+ 1f0:	5f 91       	pop	r21
+ 1f2:	4f 91       	pop	r20
+ 1f4:	3f 91       	pop	r19
+ 1f6:	2f 91       	pop	r18
+ 1f8:	0f 90       	pop	r0
+ 1fa:	0f be       	out	0x3f, r0	; 63
+ 1fc:	0f 90       	pop	r0
+ 1fe:	1f 90       	pop	r1
+ 200:	18 95       	reti
+
+00000202 <_exit>:
+ 202:	f8 94       	cli
+
+00000204 <__stop_program>:
+ 204:	ff cf       	rjmp	.-2      	; 0x204 <__stop_program>
